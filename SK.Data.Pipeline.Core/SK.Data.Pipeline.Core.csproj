@@ -44,9 +44,11 @@
   <ItemGroup>
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\StringUtil.cs" />
+    <Compile Include="DataNode.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Entity.Extension.cs" />
-    <Compile Include="ISource.cs" />
+    <Compile Include="IConsumer.cs" />
+    <Compile Include="Pipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

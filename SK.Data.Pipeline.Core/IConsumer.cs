@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public interface ISource
+    public interface IConsumer
     {
-        IEnumerable<Entity> PullData();
+        void OnNewEntity(Entity entity);
     }
 }

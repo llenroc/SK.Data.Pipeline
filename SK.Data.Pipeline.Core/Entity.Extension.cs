@@ -33,7 +33,6 @@ namespace SK.Data.Pipeline.Core
         }
         #endregion
 
-
         #region private methods
         private bool DictionaryEqual<TKey, TValue>(IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second)
         {
