@@ -61,6 +61,9 @@
     <None Include="SimpleSourceT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SampleTemplateFileOutput">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SK.Data.Pipeline.Core\SK.Data.Pipeline.Core.csproj">

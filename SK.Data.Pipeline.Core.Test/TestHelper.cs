@@ -11,8 +11,8 @@ namespace SK.Data.Pipeline.Core.Test
     {
         public static bool CompareTwoFile(string expectPath, string actualPath)
         {
-            string expectContent = File.ReadAllText(expectPath);
-            string actualContent = File.ReadAllText(actualPath);
+            string expectContent = File.ReadAllText(expectPath).Trim();
+            string actualContent = File.ReadAllText(actualPath).Trim();
 
             return expectContent.Equals(actualContent);
         }

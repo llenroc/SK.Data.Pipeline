@@ -18,6 +18,7 @@ namespace SK.Data.Pipeline.Core
 
         public SourceNode()
         {
+
         }
     }
 }

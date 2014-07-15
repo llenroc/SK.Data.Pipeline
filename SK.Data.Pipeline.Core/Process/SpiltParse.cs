@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SK.Data.Pipeline.Core.Process
+namespace SK.Data.Pipeline.Core
 {
     public class SpiltParseProcessNode : ProcessNode
     {
@@ -17,7 +17,7 @@ namespace SK.Data.Pipeline.Core.Process
 
         private bool _SkipFirstLine = false;
 
-        public SpiltParseProcessNode(DataNode parent, string separator = Entity.DefaultSeparator, string column = Entity.DefaultColumn, string[] spiltColumns = null)
+        public SpiltParseProcessNode(DataNode parent, string column, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
             : base(parent)
         {
             Separator = separator;
