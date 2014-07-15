@@ -8,6 +8,12 @@ namespace SK.Data.Pipeline.Core
 {
     public partial class Entity
     {
+        #region Constant values
+        public const string DefaultColumn = "Content";
+        public const string DefaultColumnsTemplate = "Column{0}";
+        public const string DefaultSeparator = "\t,\t";
+        #endregion
+
         #region Extra methods for Entity
         public bool IsEmpty()
         {
@@ -24,7 +30,7 @@ namespace SK.Data.Pipeline.Core
             }
         }
 
-        public override bool Equals(object obj)
+        public bool EqualsOther(object obj)
         {
             if (this == obj) return true;
             if (obj == null || !(obj is Entity)) return false;

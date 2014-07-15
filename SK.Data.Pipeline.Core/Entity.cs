@@ -54,6 +54,14 @@ namespace SK.Data.Pipeline.Core
 
             Values[key] = value;
         }
+
+        public void RemoveField(string key)
+        {
+            if (Values.ContainsKey(key))
+            {
+                Values.Remove(key);
+            }
+        }
         #endregion
     }
 }

@@ -8,7 +8,8 @@ namespace SK.Data.Pipeline.Core
 {
     public abstract class DataNode
     {
-        public event EventHandler<GetEntityEventArgs> AfterGetEntity;
+        public event EventHandler<GetEntityEventArgs> GetEntity;
+        public event EventHandler<FinishEventArgs> Finish;
 
         public abstract DataNode Parent { get; }
 
@@ -21,9 +22,14 @@ namespace SK.Data.Pipeline.Core
                 int index = 0;
                 foreach (Entity entity in GetEntities())
                 {
-                    AfterGetEntity(this, new GetEntityEventArgs(entity, index));
+                    if (GetEntity != null)
+                        GetEntity(this, new GetEntityEventArgs(entity, index++));
+
                     yield return entity;
                 }
+
+                if (Finish != null)
+                    Finish(this, new FinishEventArgs(index));
             }
         }
     }
@@ -33,11 +39,21 @@ namespace SK.Data.Pipeline.Core
         public GetEntityEventArgs(Entity entity, int index)
         {
             Index = index;
-            NewEntity = entity;
+            CurrentEntity = entity;
         }
 
         public int Index { get; set; }
 
-        public Entity NewEntity { get; set; }
+        public Entity CurrentEntity { get; set; }
+    }
+
+    public class FinishEventArgs : EventArgs
+    {
+        public FinishEventArgs(int count)
+        {
+            Count = count;
+        }
+
+        public int Count { get; set; }
     }
 }

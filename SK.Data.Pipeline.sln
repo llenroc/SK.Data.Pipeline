@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Core", "SK.Data.Pipeline.Core\SK.Data.Pipeline.Core.csproj", "{329AE254-7C53-48E1-8E11-0EB19CF72802}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Core.Test", "SK.Data.Pipeline.Core.Test\SK.Data.Pipeline.Core.Test.csproj", "{BE069A18-3CA6-49C4-B1A5-CFA4EC82B908}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UHRSTest", "UHRSTest\UHRSTest.csproj", "{98EA1E8F-9858-4464-9FEB-1FCECBD32FAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{329AE254-7C53-48E1-8E11-0EB19CF72802}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{329AE254-7C53-48E1-8E11-0EB19CF72802}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{329AE254-7C53-48E1-8E11-0EB19CF72802}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE069A18-3CA6-49C4-B1A5-CFA4EC82B908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE069A18-3CA6-49C4-B1A5-CFA4EC82B908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE069A18-3CA6-49C4-B1A5-CFA4EC82B908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE069A18-3CA6-49C4-B1A5-CFA4EC82B908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EA1E8F-9858-4464-9FEB-1FCECBD32FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EA1E8F-9858-4464-9FEB-1FCECBD32FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EA1E8F-9858-4464-9FEB-1FCECBD32FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EA1E8F-9858-4464-9FEB-1FCECBD32FAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

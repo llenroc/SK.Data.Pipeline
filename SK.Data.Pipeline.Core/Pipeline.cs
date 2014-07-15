@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class Pipeline
+    public partial class Pipeline
     {
         private DataNode _LastNode;
 
@@ -15,18 +15,12 @@ namespace SK.Data.Pipeline.Core
             _LastNode = source;
         }
 
-        public Pipeline To(IConsumer consumer)
-        {
-            _LastNode.AfterGetEntity += consumer.GetEntity;
-            return this;
-        }
-
-        public int StartPull()
+        public int Start()
         {
             return _LastNode.Entities.Count();
         }
 
-        public async Task<int> StartPullAsync()
+        public async Task<int> StartAsync()
         {
             return await Task.Run(() => {
                 return _LastNode.Entities.Count();

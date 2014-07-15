@@ -8,6 +8,8 @@ namespace SK.Data.Pipeline.Core
 {
     public interface IConsumer
     {
-        void GetEntity(object sender, GetEntityEventArgs args);
+        void Consume(object sender, GetEntityEventArgs args);
+
+        void Finish(object sender, FinishEventArgs args);
     }
 }
