@@ -15,8 +15,8 @@ namespace SK.Data.Pipeline.Core.Test
         [TestMethod]
         public void FromFileToFile()
         {
-            Pipeline.Create(new FileSourceNode(SimpleSource))
-                    .SpiltParse(Entity.DefaultColumn)
+            PipelineTask.Create(new SingleLineFileSourceNode(SimpleSource))
+                    .Spilt(Entity.DefaultColumn)
                     .To(new FileConsumer(SimpleFileOutput))
                     .Start();
 
@@ -24,10 +24,10 @@ namespace SK.Data.Pipeline.Core.Test
         }
 
         [TestMethod]
-        public void SpiltBy_T()
+        public void SpiltByT()
         {
-            Pipeline.Create(new FileSourceNode(SimpleSourceT))
-                    .SpiltParse(Entity.DefaultColumn, separator: "\t")
+            PipelineTask.Create(new SingleLineFileSourceNode(SimpleSourceT))
+                    .Spilt(Entity.DefaultColumn, separator: "\t")
                     .To(new FileConsumer(SimpleFileOutput))
                     .Start();
 
@@ -37,9 +37,9 @@ namespace SK.Data.Pipeline.Core.Test
         [TestMethod]
         public void AddTemplateColumn()
         {
-            Pipeline.Create(new FileSourceNode(SimpleSourceT))
-                    .SpiltParse(Entity.DefaultColumn, separator: "\t")
-                    .AddTemplateColumn("##col1## ##col2", "Template")
+            PipelineTask.Create(new SingleLineFileSourceNode(SimpleSourceT))
+                    .Spilt(Entity.DefaultColumn, separator: "\t")
+                    .AddTemplateColumn("Template", "##col1## ##col2")
                     .ToFile(TemplateFileOutput)
                     .Start();
 
@@ -49,12 +49,26 @@ namespace SK.Data.Pipeline.Core.Test
         [TestMethod]
         public void FromFileToTemplateFile()
         {
-            Pipeline.Create(new FileSourceNode(SimpleSourceT))
-                    .SpiltParse(Entity.DefaultColumn, separator: "\t")
+            PipelineTask.Create(new SingleLineFileSourceNode(SimpleSourceT))
+                    .Spilt(Entity.DefaultColumn, separator: "\t")
                     .ToTemplateFile(TemplateFileOutput, "##col1## dddd ##col2##")
                     .Start();
 
-            //Assert.IsTrue(TestHelper.CompareTwoFile(SimpleSource, SimpleFileOutput));
+            Assert.IsTrue(TestHelper.CompareTwoFile(SimpleSource, SimpleFileOutput));
+        }
+
+        [TestMethod]
+        public void MonitorConsumer()
+        {
+            int count = 0;
+            PipelineTask.Create(new SingleLineFileSourceNode(SimpleSource))
+                    .AddMonitor((sender, args) =>
+                                {
+                                    count++;
+                                })
+                    .Start();
+
+            Assert.AreEqual(2, count);
         }
     }
 }

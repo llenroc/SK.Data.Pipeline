@@ -8,6 +8,8 @@ namespace SK.Data.Pipeline.Core
 {
     public abstract class DataNode
     {
+        public event EventHandler<StartEventArgs> Start;
+        public event EventHandler<FirstEntityEventArgs> GetFirstEntity;
         public event EventHandler<GetEntityEventArgs> GetEntity;
         public event EventHandler<FinishEventArgs> Finish;
 
@@ -20,18 +22,46 @@ namespace SK.Data.Pipeline.Core
             get
             {
                 int index = 0;
-                foreach (Entity entity in GetEntities())
+                try
                 {
-                    if (GetEntity != null)
-                        GetEntity(this, new GetEntityEventArgs(entity, index++));
+                    // Call Start before pull entity
+                    if (Start != null) Start(this, new StartEventArgs(this));
 
-                    yield return entity;
+                    foreach (Entity entity in GetEntities())
+                    {
+                        // trigger first entity event
+                        if (index == 0 && GetFirstEntity != null) GetFirstEntity(this, new FirstEntityEventArgs(entity));
+                        if (GetEntity != null) GetEntity(this, new GetEntityEventArgs(entity, index++));
+
+                        yield return entity;
+                    }
                 }
-
-                if (Finish != null)
-                    Finish(this, new FinishEventArgs(index));
+                finally
+                {
+                    if (Finish != null) Finish(this, new FinishEventArgs(index));
+                }
             }
         }
+    }
+
+    public class StartEventArgs : EventArgs
+    {
+        public StartEventArgs(DataNode dataNode)
+        {
+            DataNode = dataNode;
+        }
+
+        public DataNode DataNode { get; set; }
+    }
+
+    public class FirstEntityEventArgs : EventArgs
+    {
+        public FirstEntityEventArgs(Entity entity)
+        {
+            FirstEntity = entity;
+        }
+
+        public Entity FirstEntity { get; set; }
     }
 
     public class GetEntityEventArgs : EventArgs

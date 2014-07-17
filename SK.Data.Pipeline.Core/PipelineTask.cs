@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public partial class Pipeline
+    public partial class PipelineTask
     {
         private DataNode _LastNode;
 
-        private Pipeline(DataNode source)
+        private PipelineTask(DataNode source)
         {
             _LastNode = source;
         }
@@ -27,9 +27,6 @@ namespace SK.Data.Pipeline.Core
             });
         }
 
-        public static Pipeline Create(SourceNode source)
-        {
-            return new Pipeline(source);
-        }
+
     }
 }

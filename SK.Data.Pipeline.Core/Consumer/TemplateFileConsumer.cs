@@ -9,12 +9,13 @@ using System.Text.RegularExpressions;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class TemplateFileConsumer : IConsumer
+    public class TemplateFileConsumer : ConsumerBase
     {
         private static Regex TemplateRegex = new Regex("##(.*?)##", RegexOptions.Compiled);
 
         public string Path { get; set; }
         public string Template { get; set; }
+
 
         private TextWriter _Writer = null;
 
@@ -22,11 +23,14 @@ namespace SK.Data.Pipeline.Core
         {
             Path = path;
             Template = template;
+        }
 
+        public override void Start(object sender, StartEventArgs args)
+        {
             _Writer = File.CreateText(Path);
         }
 
-        public virtual void Consume(object sender, GetEntityEventArgs args)
+        public override void Consume(object sender, GetEntityEventArgs args)
         {
             Entity entity = args.CurrentEntity;
             string content = TemplateRegex.Replace(Template, (match) =>
@@ -46,7 +50,7 @@ namespace SK.Data.Pipeline.Core
             _Writer.WriteLine(content);
         }
 
-        public virtual void Finish(object sender, FinishEventArgs args)
+        public override void Finish(object sender, FinishEventArgs args)
         {
             _Writer.Dispose();
 

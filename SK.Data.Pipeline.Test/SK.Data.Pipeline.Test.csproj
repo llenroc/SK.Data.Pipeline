@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BE069A18-3CA6-49C4-B1A5-CFA4EC82B908}</ProjectGuid>
+    <ProjectGuid>{95254E77-2C7C-4127-98E9-C48508AA8DBC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SK.Data.Pipeline.Core.Test</RootNamespace>
-    <AssemblyName>SK.Data.Pipeline.Core.Test</AssemblyName>
+    <RootNamespace>SK.Data.Pipeline.Test</RootNamespace>
+    <AssemblyName>SK.Data.Pipeline.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,23 +50,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BasicTest.cs" />
-    <Compile Include="CsvXMLJsonTest.cs" />
-    <Compile Include="ProcessTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelper.cs" />
+    <Compile Include="RazorTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="SampleRazorTemplateFile">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="SimpleSource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SampleSource">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="SimpleSourceT">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleTemplateFileOutput">
+    <None Include="SampleRazorTemplateSource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -75,12 +70,10 @@
       <Project>{329ae254-7c53-48e1-8e11-0eb19cf72802}</Project>
       <Name>SK.Data.Pipeline.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Source.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
+    <ProjectReference Include="..\SK.Data.Pipeline.RazorTemplate\SK.Data.Pipeline.RazorTemplate.csproj">
+      <Project>{d9790586-77fa-489f-9e8d-d26aa0c1ddb4}</Project>
+      <Name>SK.Data.Pipeline.RazorTemplate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

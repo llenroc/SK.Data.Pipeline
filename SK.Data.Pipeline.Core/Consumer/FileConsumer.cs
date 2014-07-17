@@ -8,7 +8,7 @@ using SK.Data.Pipeline.Core.Common;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class FileConsumer : IConsumer
+    public class FileConsumer : ConsumerBase
     {
         public string Path { get; set; }
 
@@ -23,8 +23,6 @@ namespace SK.Data.Pipeline.Core
             Path = path;
             Separator = separator;
             Columns = columns;
-            
-            _Writer = File.CreateText(Path);
         }
 
         private void InitColumns(Entity entity)
@@ -37,18 +35,23 @@ namespace SK.Data.Pipeline.Core
             _Writer.WriteLine(string.Join(Separator, Columns));
         }
 
-        public virtual void Consume(object sender, GetEntityEventArgs args)
+        public override void Start(object sender, StartEventArgs args)
         {
-            if (args.Index == 0)
-            {
-                if (Columns == null)
-                {
-                    InitColumns(args.CurrentEntity);
-                }
+            _Writer = File.CreateText(Path);
+        }
 
-                WirteTitle();
+        public override void GetFirstEntity(object sender, FirstEntityEventArgs args)
+        {
+            if (Columns == null)
+            {
+                InitColumns(args.FirstEntity);
             }
 
+            WirteTitle();
+        }
+
+        public override void Consume(object sender, GetEntityEventArgs args)
+        {
             object[] values = new object[Columns.Length];
                 
             for (int i = 0; i < Columns.Length; ++i)
@@ -59,7 +62,7 @@ namespace SK.Data.Pipeline.Core
             _Writer.WriteLine(string.Join(Separator, values));
         }
 
-        public virtual void Finish(object sender, FinishEventArgs args)
+        public override void Finish(object sender, FinishEventArgs args)
         {
             _Writer.Dispose();
 

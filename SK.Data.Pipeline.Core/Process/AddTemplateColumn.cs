@@ -14,7 +14,7 @@ namespace SK.Data.Pipeline.Core
         public string Template { get; set; }
         public string Column { get; set; }
 
-        public AddTemplateColumn(DataNode parent, string template, string column)
+        public AddTemplateColumn(DataNode parent, string column, string template)
             : base(parent)
         {
             Template = template;

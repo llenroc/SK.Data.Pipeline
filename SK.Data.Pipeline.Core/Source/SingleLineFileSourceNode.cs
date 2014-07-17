@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class FileSourceNode : SourceNode
+    public class SingleLineFileSourceNode : SourceNode
     {
         public string FilePath { set; get; }
 
-        public FileSourceNode(string filePath)
+        public SingleLineFileSourceNode(string filePath)
             : base()
         {
             FilePath = filePath;
@@ -19,10 +19,12 @@ namespace SK.Data.Pipeline.Core
 
         protected override IEnumerable<Entity> GetEntities()
         {
-            var entity = new Entity();
-            entity.SetValue(Entity.DefaultColumn, File.ReadAllText(FilePath), false);
-            
-            yield return entity;
+            foreach (string line in File.ReadLines(FilePath))
+            {
+                var entity = new Entity();
+                entity.SetValue(Entity.DefaultColumn, line, false);
+                yield return entity;
+            }
         }
     }
 }

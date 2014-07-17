@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,14 @@ namespace SK.Data.Pipeline.Core
             return Values.Keys.Count() == 0;
         }
 
-        public void Extend(Entity item)
+        public Entity Clone()
+        {
+            var entity = new Entity();
+            entity.Values = new Dictionary<string, object>(Values);
+            return entity;
+        }
+
+        public Entity Extend(Entity item)
         {
             foreach (string key in item.Values.Keys)
             {
@@ -28,6 +36,8 @@ namespace SK.Data.Pipeline.Core
 
                 Values[key] = item.Values[key];
             }
+
+            return this;
         }
 
         public bool EqualsOther(object obj)
@@ -36,6 +46,11 @@ namespace SK.Data.Pipeline.Core
             if (obj == null || !(obj is Entity)) return false;
 
             return DictionaryEqual(this.Values, (obj as Entity).Values);
+        }
+
+        public object ToDynamicObject()
+        {
+            return new DynamicEntity(this);
         }
         #endregion
 
@@ -55,6 +70,36 @@ namespace SK.Data.Pipeline.Core
                 if (!comparer.Equals(kvp.Value, secondValue)) return false;
             }
             return true;
+        }
+        #endregion
+    
+        #region Dynamic Entity Class
+        class DynamicEntity : DynamicObject
+        {
+            Dictionary<string, object> _Dictionary = new Dictionary<string, object>();
+
+            public DynamicEntity(Entity entity)
+            {
+                _Dictionary = entity.Values;
+            }
+
+            public override bool TryGetMember(GetMemberBinder binder, out object result)
+            {
+                string name = binder.Name.ToLower();
+                return _Dictionary.TryGetValue(name, out result);
+            }
+
+            public override bool TrySetMember(
+                SetMemberBinder binder, object value)
+            {
+                _Dictionary[binder.Name.ToLower()] = value;
+                return true;
+            }
+
+            public override IEnumerable<string> GetDynamicMemberNames()
+            {
+                return _Dictionary.Keys;
+            }
         }
         #endregion
     }

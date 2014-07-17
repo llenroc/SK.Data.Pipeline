@@ -15,10 +15,5 @@ namespace SK.Data.Pipeline.Core
                 return null;
             }
         }
-
-        public SourceNode()
-        {
-
-        }
     }
 }
