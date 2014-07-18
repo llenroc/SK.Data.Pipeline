@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,16 +20,21 @@ namespace SK.Data.Pipeline.Core
             return Create(new FuncSourceNode(getEntitiesFunc));
         }
 
+        public static PipelineTask FromWeb(string url, ICredentials credential = null)
+        {
+            return PipelineTask.Create(new WebSourceNode(url, credential));
+        }
+
         public static PipelineTask FromCsvFile(string path)
         {
             return PipelineTask.Create(new SingleLineFileSourceNode(path))
                                .ParseCsv(Entity.DefaultColumn);
         }
 
-        public static PipelineTask FromXmlFile(string path, string itemXPath, params string[] columnXPaths)
+        public static PipelineTask FromXmlFile(string path, XMLEntityModel model)
         {
             return PipelineTask.Create(new FileSourceNode(path))
-                               .ParseXml(Entity.DefaultColumn, itemXPath, columnXPaths)
+                               .ParseXml(Entity.DefaultColumn, model)
                                .RemoveFields(Entity.DefaultColumn);
         }
         #endregion
@@ -43,56 +49,56 @@ namespace SK.Data.Pipeline.Core
 
         public PipelineTask RemoveFields(params string[] columnsShouldRemove)
         {
-            AddProcessNode((node) => new RemoveColumns(node, columnsShouldRemove));
+            AddProcessNode((node) => new RemoveColumnsProcessNode(node, columnsShouldRemove));
 
             return this;
         }
 
         public PipelineTask Filter(Predicate<Entity> shouldFilter)
         {
-            AddProcessNode((node) => new Filter(node, shouldFilter));
+            AddProcessNode((node) => new FilterProcessNode(node, shouldFilter));
 
             return this;
         }
 
         public PipelineTask Extend(Action<Entity> extendAction)
         {
-            AddProcessNode((node) => new Extend(node, extendAction));
+            AddProcessNode((node) => new ExtendProcessNode(node, extendAction));
 
             return this;
         }
 
         public PipelineTask Convert(Func<Entity, Entity> convertFunc)
         {
-            AddProcessNode((node) => new Convert(node, convertFunc));
+            AddProcessNode((node) => new ConvertProcessNode(node, convertFunc));
 
             return this;
         }
 
-        public PipelineTask Spilt(string column, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
+        public PipelineTask Spilt(string targetColumn, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
         {
-            AddProcessNode((node) => new Spilt(node, column, separator, spiltColumns));
+            AddProcessNode((node) => new SpiltProcessNode(node, targetColumn, separator, spiltColumns));
 
             return this;
         }
 
-        public PipelineTask ParseCsv(string column)
+        public PipelineTask ParseCsv(string targetColumn)
         {
-            AddProcessNode((node) => new ParseCsv(node, column));
+            AddProcessNode((node) => new ParseCsvProcessNode(node, targetColumn));
 
             return this;
         }
 
-        public PipelineTask ParseXml(string column, string itemXPath, params string[] columnXPaths)
+        public PipelineTask ParseXml(string targetColumn, XMLEntityModel model)
         {
-            AddProcessNode((node) => new ParseXML(node, column, itemXPath, columnXPaths));
+            AddProcessNode((node) => new ParseXMLProcessNode(node, targetColumn, model));
 
             return this;
         }
 
-        public PipelineTask AddTemplateColumn(string column, string template)
+        public PipelineTask AddTemplateColumn(string targetColumn, string template)
         {
-            AddProcessNode((node) => new AddTemplateColumn(_LastNode, column, template));
+            AddProcessNode((node) => new AddTemplateColumnProcessNode(_LastNode, targetColumn, template));
 
             return this;
         }
@@ -114,6 +120,12 @@ namespace SK.Data.Pipeline.Core
             return this;
         }
 
+        public PipelineTask ToFile(string path, EntityModel model, string separator = Entity.DefaultSeparator)
+        {
+            To(new FileConsumer(path, model, separator));
+            return this;
+        }
+
         public PipelineTask ToTemplateFile(string path, string template)
         {
             To(new TemplateFileConsumer(path, template));
@@ -124,6 +136,13 @@ namespace SK.Data.Pipeline.Core
         {
             To(new MonitorConsumer(monitorAction));
             
+            return this;
+        }
+
+        public PipelineTask AddMonitor(Action<Entity> monitorAction)
+        {
+            To(new MonitorConsumer(monitorAction));
+
             return this;
         }
         #endregion

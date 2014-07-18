@@ -14,7 +14,7 @@ namespace SK.Data.Pipeline.Core
 
         public string Separator { get; set; }
 
-        public string[] Columns { get; set; }
+        public EntityModel Model { get; private set; }
 
         private TextWriter _Writer = null;
 
@@ -22,17 +22,26 @@ namespace SK.Data.Pipeline.Core
         {
             Path = path;
             Separator = separator;
-            Columns = columns;
+
+            if (columns != null)
+                Model = new EntityModel(columns);
+        }
+
+        public FileConsumer(string path, EntityModel model, string separator = Entity.DefaultSeparator)
+        {
+            Path = path;
+            Separator = separator;
+            Model = model;
         }
 
         private void InitColumns(Entity entity)
         {
-            Columns = entity.Values.Keys.ToArray();
+            Model = new EntityModel(entity.Columns);
         }
 
         private void WirteTitle()
         {
-            _Writer.WriteLine(string.Join(Separator, Columns));
+            _Writer.WriteLine(string.Join(Separator, Model.Columns));
         }
 
         public override void Start(object sender, StartEventArgs args)
@@ -42,7 +51,7 @@ namespace SK.Data.Pipeline.Core
 
         public override void GetFirstEntity(object sender, FirstEntityEventArgs args)
         {
-            if (Columns == null)
+            if (Model == null)
             {
                 InitColumns(args.FirstEntity);
             }
@@ -52,14 +61,16 @@ namespace SK.Data.Pipeline.Core
 
         public override void Consume(object sender, GetEntityEventArgs args)
         {
-            object[] values = new object[Columns.Length];
-                
-            for (int i = 0; i < Columns.Length; ++i)
+            var currentEntity = args.CurrentEntity;
+            currentEntity.ToStandradEntity(Model);
+
+            object[] values = new object[Model.Columns.Length];
+            for (int i = 0; i < Model.Columns.Length; ++i)
             {
-                args.CurrentEntity.TryGetValue(Columns[i], out values[i]);
+                currentEntity.TryGetValue(Model.Columns[i], out values[i]);
             }
 
-            _Writer.WriteLine(string.Join(Separator, values));
+            _Writer.WriteLine(string.Join(Separator, values).Replace('\r', ' ').Replace('\n', ' '));
         }
 
         public override void Finish(object sender, FinishEventArgs args)

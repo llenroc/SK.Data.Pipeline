@@ -1,0 +1,101 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.XPath;
+
+namespace SK.Data.Pipeline.Core
+{
+    public class ParseXML : ProcessNode
+    {
+        private Parser _Parser;
+
+        public string Column { set; get; }
+
+        public ParseXML(DataNode parent, string column, string itemXPath, params string[] columnXPaths)
+            : base(parent)
+        {
+            Column = column;
+            _Parser = new Parser(itemXPath, columnXPaths);
+        }
+
+        public void AddColumn(string xPath, string columnName = null)
+        {
+            _Parser.AddColumn(xPath, columnName);
+        }
+
+        protected override IEnumerable<Entity> GetEntities()
+        {
+            foreach (Entity entity in Parent.Entities)
+            {
+                string content = null;
+                if (entity.TryGetValue(Column, out content))
+                {
+                    foreach (Entity xmlEntity in _Parser.Parse(content))
+                    {
+                        yield return entity.Clone().Extend(xmlEntity);
+                    }
+                }
+                else
+                {
+                    yield return entity;
+                }
+            }
+        }
+
+        internal class Parser
+        {
+            public string ItemXPath { set; get; }
+
+            private Dictionary<string, string> _ColumnNamesMapping = new Dictionary<string, string>();
+
+            public Parser(string itemXPath, params string[] columnXPaths)
+            {
+                ItemXPath = itemXPath;
+
+                foreach (string ColumnXPath in columnXPaths)
+                    _ColumnNamesMapping[ColumnXPath] = null;
+            }
+
+            public void AddColumn(string xPath, string columnName = null)
+            {
+                _ColumnNamesMapping[xPath] = columnName;
+            }
+
+            public IEnumerable<Entity> Parse(string content)
+            {
+                byte[] byteArray = Encoding.UTF8.GetBytes(content);
+                MemoryStream stream = new MemoryStream(byteArray);
+                XPathDocument document = new XPathDocument(stream);
+                XPathNavigator navigator = document.CreateNavigator();
+
+                XPathNodeIterator itemItr = navigator.Select(ItemXPath);
+                while (itemItr.MoveNext())
+                {
+                    var entity = new Entity();
+
+                    XPathNavigator current = itemItr.Current;
+                    foreach (string xPath in _ColumnNamesMapping.Keys)
+                    {
+                        var columnValue = current.SelectSingleNode(xPath);
+                        if (columnValue != null)
+                        {
+                            string columnName = _ColumnNamesMapping[xPath] ?? columnValue.Name;
+                            entity.SetValue(columnName, columnValue.Value);
+                        }
+                    }
+
+                    yield return entity;
+                }
+            }
+        }
+    }
+
+    public class XMLEntityModel : EntityModel
+    {
+        public string ItemXPath { set; get; }
+        public Dictionary<string, string> ColumnNamesMapping { get; set; }
+    }
+}

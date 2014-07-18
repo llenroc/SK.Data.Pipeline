@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class Spilt : ProcessNode
+    public class SpiltProcessNode : ProcessNode
     {
         public string Separator { get; set; }
 
@@ -17,7 +17,7 @@ namespace SK.Data.Pipeline.Core
 
         private bool _SkipFirstLine = false;
 
-        public Spilt(DataNode parent, string column, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
+        public SpiltProcessNode(DataNode parent, string column, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
             : base(parent)
         {
             Separator = separator;
@@ -63,7 +63,7 @@ namespace SK.Data.Pipeline.Core
                     }
                 }
 
-                entity.RemoveField(Column);
+                entity.RemoveColumn(Column);
                 yield return entity;
             }
         }

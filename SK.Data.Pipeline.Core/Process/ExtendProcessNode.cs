@@ -6,21 +6,23 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class Convert : ProcessNode
+    public class ExtendProcessNode : ProcessNode
     {
-        public Func<Entity, Entity> ConvertFunc { get; set; }
+        public Action<Entity> ExtendAction { get; set; }
 
-        public Convert(DataNode parent, Func<Entity, Entity> convertFunc)
+        public ExtendProcessNode(DataNode parent, Action<Entity> extendAction)
             : base(parent)
         {
-            ConvertFunc = convertFunc;
+            ExtendAction = extendAction;
         }
 
         protected override IEnumerable<Entity> GetEntities()
         {
             foreach (var entity in Parent.Entities)
             {
-                yield return ConvertFunc(entity);
+                ExtendAction(entity);
+
+                yield return entity;
             }
         }
     }

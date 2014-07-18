@@ -15,6 +15,14 @@ namespace SK.Data.Pipeline.Core
             private set;
             get;
         }
+
+        public string[] Columns
+        {
+            get
+            {
+                return Values.Keys.ToArray();
+            }
+        }
         #endregion
 
         #region Constructor
@@ -55,7 +63,7 @@ namespace SK.Data.Pipeline.Core
             Values[key] = value;
         }
 
-        public void RemoveField(string key)
+        public void RemoveColumn(string key)
         {
             if (Values.ContainsKey(key))
             {

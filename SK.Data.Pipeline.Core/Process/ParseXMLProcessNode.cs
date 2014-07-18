@@ -8,17 +8,17 @@ using System.Xml.XPath;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class ParseXML : ProcessNode
+    public class ParseXMLProcessNode : ProcessNode
     {
-        private XMLParser _Parser;
+        public string TargetColumn { set; get; }
 
-        public string Column { set; get; }
+        public XMLEntityModel Model { set; get; }
 
-        public ParseXML(DataNode parent, string column, string itemXPath, params string[] columnXPaths)
+        public ParseXMLProcessNode(DataNode parent, string targetColumn, XMLEntityModel model)
             : base(parent)
         {
-            Column = column;
-            _Parser = new XMLParser(itemXPath, columnXPaths);
+            TargetColumn = targetColumn;
+            Model = model;
         }
 
         protected override IEnumerable<Entity> GetEntities()
@@ -26,11 +26,13 @@ namespace SK.Data.Pipeline.Core
             foreach (Entity entity in Parent.Entities)
             {
                 string content = null;
-                if (entity.TryGetValue(Column, out content))
+                if (entity.TryGetValue(TargetColumn, out content))
                 {
-                    foreach (Entity xmlEntity in _Parser.Parse(content))
+                    foreach (var newEntity in Parse(content))
                     {
-                        yield return entity.Clone().Extend(xmlEntity);
+                        entity.Extend(newEntity);
+                        entity.RemoveColumn(TargetColumn);
+                        yield return entity;
                     }
                 }
                 else
@@ -39,39 +41,29 @@ namespace SK.Data.Pipeline.Core
                 }
             }
         }
-    }
 
-    internal class XMLParser
-    {
-        public string ItemXPath { set; get; }
-
-        private string[] ColumnXPaths { set; get; }
-
-        public XMLParser(string itemXPath, params string[] columnXPaths)
-        {
-            ItemXPath = itemXPath;
-            ColumnXPaths = columnXPaths;
-        }
-
-        public IEnumerable<Entity> Parse(string content)
+        private IEnumerable<Entity> Parse(string content)
         {
             byte[] byteArray = Encoding.UTF8.GetBytes(content);
             MemoryStream stream = new MemoryStream(byteArray);
             XPathDocument document = new XPathDocument(stream);
             XPathNavigator navigator = document.CreateNavigator();
 
-            XPathNodeIterator itemItr = navigator.Select(ItemXPath);
+            XPathNodeIterator itemItr = navigator.Select(Model.ItemXPath);
             while (itemItr.MoveNext())
             {
                 var entity = new Entity();
 
                 XPathNavigator current = itemItr.Current;
-                foreach (string xPath in ColumnXPaths)
+                foreach (string column in Model.Columns)
                 {
+                    if (!Model.ColumnXPath.ContainsKey(column)) continue;
+
+                    string xPath = Model.ColumnXPath[column];
                     var columnValue = current.SelectSingleNode(xPath);
                     if (columnValue != null)
                     {
-                        entity.SetValue(columnValue.Name, columnValue.Value);
+                        entity.SetValue(column, columnValue.Value);
                     }
                 }
 

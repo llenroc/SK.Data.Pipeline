@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class Filter : ProcessNode
+    public class TopProcessNode : ProcessNode
     {
-        public Predicate<Entity> ShouldFilter { get; set; }
+        public int Top { get; set; }
 
-        public Filter(DataNode parent, Predicate<Entity> shouldFilter)
+        public TopProcessNode(DataNode parent, int top)
             : base(parent)
         {
-            ShouldFilter = shouldFilter;
+            Top = top;
         }
 
         protected override IEnumerable<Entity> GetEntities()
         {
+            int index = 0;
             foreach (var entity in Parent.Entities)
             {
-                if (ShouldFilter(entity)) continue;
+                if (index++ >= Top) break;
 
                 yield return entity;
             }

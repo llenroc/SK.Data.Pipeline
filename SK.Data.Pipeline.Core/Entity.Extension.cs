@@ -40,7 +40,17 @@ namespace SK.Data.Pipeline.Core
             return this;
         }
 
-        public bool EqualsOther(object obj)
+        public Entity ToStandradEntity(EntityModel model)
+        {
+            return model.ToStandradEntity(this);
+        }
+
+        public Entity AddDefaultInfo(EntityModel model)
+        {
+            return model.AddDefaultValue(this);
+        }
+
+        public bool EqualsOtherEntity(object obj)
         {
             if (this == obj) return true;
             if (obj == null || !(obj is Entity)) return false;

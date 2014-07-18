@@ -70,5 +70,42 @@ namespace SK.Data.Pipeline.Core.Test
 
             Assert.AreEqual(2, count);
         }
+
+        [TestMethod]
+        public void WebSource()
+        {
+            int count = 0;
+            string content = null;
+            PipelineTask.Create(new WebSourceNode(@"http://www.bing.com"))
+                    .AddMonitor((sender, args) =>
+                    {
+                        count++;
+                        content = args.CurrentEntity.GetValue<string>(Entity.DefaultColumn);
+                    })
+                    .Start();
+
+            Assert.AreEqual(1, count);
+            Assert.IsNotNull(content);
+        }
+
+        [TestMethod]
+        public void EntityModelTest()
+        {
+            EntityModel model = new EntityModel("col1", "col2");
+            model.AddColumn("col3", "col3");
+            model.AddColumn("col4", typeof(int));
+
+            var testEntity = new Entity();
+            testEntity.SetValue("col5", "test");
+
+            var clonedEntity = testEntity.Clone();
+            clonedEntity.AddDefaultInfo(model);
+            Assert.IsTrue(clonedEntity.Columns.Length == 5);
+
+            clonedEntity = testEntity.Clone();
+            clonedEntity.ToStandradEntity(model);
+            Assert.IsTrue(clonedEntity.Columns.Length == 4);
+            Assert.IsTrue(!clonedEntity.Values.ContainsKey("col5"));
+        }
     }
 }

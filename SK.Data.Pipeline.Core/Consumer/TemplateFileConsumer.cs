@@ -18,11 +18,14 @@ namespace SK.Data.Pipeline.Core
 
 
         private TextWriter _Writer = null;
+        private EntityModel _Model = null;
 
-        public TemplateFileConsumer(string path, string template)
+        public TemplateFileConsumer(string path, string template, EntityModel model = null)
         {
             Path = path;
             Template = template;
+
+            _Model = model;
         }
 
         public override void Start(object sender, StartEventArgs args)
@@ -33,6 +36,11 @@ namespace SK.Data.Pipeline.Core
         public override void Consume(object sender, GetEntityEventArgs args)
         {
             Entity entity = args.CurrentEntity;
+            if (_Model != null)
+            {
+                entity.AddDefaultInfo(_Model);
+            }
+
             string content = TemplateRegex.Replace(Template, (match) =>
             {
                 object value = null;

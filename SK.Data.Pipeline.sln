@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.RazorTempl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Test", "SK.Data.Pipeline.Test\SK.Data.Pipeline.Test.csproj", "{95254E77-2C7C-4127-98E9-C48508AA8DBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Html", "SK.Data.Pipeline.Html\SK.Data.Pipeline.Html.csproj", "{3AD60B05-04D4-4F19-82C7-8EC123C33822}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Web", "SK.Data.Pipeline.Web\SK.Data.Pipeline.Web.csproj", "{3AD60B05-04D4-4F19-82C7-8EC123C33822}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

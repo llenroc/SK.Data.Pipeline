@@ -23,7 +23,11 @@ namespace SK.Data.Pipeline.Core.Test
         [TestMethod]
         public void XmlBasic()
         {
-            PipelineTask.FromXmlFile(XmlSource, @".//Entity", "./col1", "./col2")
+            XMLEntityModel model = new XMLEntityModel(@".//Entity");
+            model.AddXMLColumn("col1", "./col1");
+            model.AddXMLColumn("col2", "./col2");
+
+            PipelineTask.FromXmlFile(XmlSource, model)
                         .ToFile(Output)
                         .Start();
 

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class AddTemplateColumn : ProcessNode
+    public class AddTemplateColumnProcessNode : ProcessNode
     {
         private static Regex TemplateRegex = new Regex("##(.*?)##", RegexOptions.Compiled);
 
         public string Template { get; set; }
         public string Column { get; set; }
 
-        public AddTemplateColumn(DataNode parent, string column, string template)
+        public AddTemplateColumnProcessNode(DataNode parent, string column, string template)
             : base(parent)
         {
             Template = template;

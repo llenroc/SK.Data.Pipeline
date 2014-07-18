@@ -15,6 +15,11 @@ namespace SK.Data.Pipeline.Core
             MonitorFunc = monitorFunc;
         }
 
+        public MonitorConsumer(Action<Entity> monitorFunc)
+        {
+            MonitorFunc = (sender, args) => { monitorFunc(args.CurrentEntity); };
+        }
+
         public override void Consume(object sender, GetEntityEventArgs args)
         {
             MonitorFunc(sender, args);

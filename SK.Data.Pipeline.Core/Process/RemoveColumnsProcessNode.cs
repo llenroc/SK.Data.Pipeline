@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Core
 {
-    public class RemoveColumns : ProcessNode
+    public class RemoveColumnsProcessNode : ProcessNode
     {
         public string[] ColumnsShouldRemove;
 
-        public RemoveColumns(DataNode parent, params string[] columnsShouldRemove)
+        public RemoveColumnsProcessNode(DataNode parent, params string[] columnsShouldRemove)
             :base(parent)
         {
             ColumnsShouldRemove = columnsShouldRemove ?? new string[0];
@@ -22,7 +22,7 @@ namespace SK.Data.Pipeline.Core
             {
                 foreach (string column in ColumnsShouldRemove)
                 {
-                    entity.RemoveField(column);
+                    entity.RemoveColumn(column);
                 }
 
                 yield return entity;
