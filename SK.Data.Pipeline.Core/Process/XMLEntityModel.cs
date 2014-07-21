@@ -11,7 +11,7 @@ namespace SK.Data.Pipeline.Core
         public string ItemXPath { set; get; }
         public Dictionary<string, string> ColumnXPath { get; set; }
 
-        public XMLEntityModel(string itemXPath, params string[] columns)
+        public XMLEntityModel(string itemXPath = "*", params string[] columns)
             : base(columns)
         {
             ItemXPath = itemXPath;

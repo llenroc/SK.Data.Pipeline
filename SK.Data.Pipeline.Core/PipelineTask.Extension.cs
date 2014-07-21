@@ -37,6 +37,12 @@ namespace SK.Data.Pipeline.Core
                                .ParseXml(Entity.DefaultColumn, model)
                                .RemoveFields(Entity.DefaultColumn);
         }
+
+        public static PipelineTask FromHtml(string url, EntityModel model, ICredentials credential = null)
+        {
+            return PipelineTask.Create(new WebSourceNode(url, credential));
+                               
+        }
         #endregion
 
         #region Add Process Node
@@ -94,6 +100,16 @@ namespace SK.Data.Pipeline.Core
             AddProcessNode((node) => new ParseXMLProcessNode(node, targetColumn, model));
 
             return this;
+        }
+        public PipelineTask ParseHtml(string column, XMLEntityModel model)
+        {
+            AddProcessNode((node) => new ParseHtmlProcessNode(node, column, model));
+            return this;
+        }
+
+        public PipelineTask ParseHtml(XMLEntityModel model)
+        {
+            return ParseHtml(Entity.DefaultColumn, model);
         }
 
         public PipelineTask AddTemplateColumn(string targetColumn, string template)

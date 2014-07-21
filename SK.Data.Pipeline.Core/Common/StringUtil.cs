@@ -35,5 +35,17 @@ namespace SK.Data.Pipeline.Core.Common
 
             return valueStr;
         }
+
+        public static void Shuffle(string[] arrayString)
+        {
+		    var random = new Random(DateTime.Now.Millisecond);
+            for (int i = arrayString.Length; i > 1; i--)
+		    {
+			    int j = random.Next(i); 
+                string tmp = arrayString[j];
+                arrayString[j] = arrayString[i - 1];
+                arrayString[i - 1] = tmp;
+		    }
+        }
     }
 }

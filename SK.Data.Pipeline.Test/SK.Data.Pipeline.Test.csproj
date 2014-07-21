@@ -50,7 +50,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="WebTest.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="RazorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,10 +76,6 @@
     <ProjectReference Include="..\SK.Data.Pipeline.RazorTemplate\SK.Data.Pipeline.RazorTemplate.csproj">
       <Project>{d9790586-77fa-489f-9e8d-d26aa0c1ddb4}</Project>
       <Name>SK.Data.Pipeline.RazorTemplate</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SK.Data.Pipeline.Web\SK.Data.Pipeline.Web.csproj">
-      <Project>{3ad60b05-04d4-4f19-82c7-8ec123c33822}</Project>
-      <Name>SK.Data.Pipeline.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

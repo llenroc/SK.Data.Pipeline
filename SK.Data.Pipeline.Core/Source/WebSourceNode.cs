@@ -1,4 +1,5 @@
-﻿using SK.RetryLib;
+﻿using SK.Data.Pipeline.Core.Common;
+using SK.RetryLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,17 +23,7 @@ namespace SK.Data.Pipeline.Core
 
         protected override IEnumerable<Entity> GetEntities()
         {
-            string content = Retry.Func<string>(() =>
-            {
-                WebRequest request = WebRequest.Create(Url);
-                if (Credentials != null)
-                    request.Credentials = Credentials;
-
-                WebResponse response = request.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-
-                return reader.ReadToEnd();
-            }, 5, retryPolicy: new WebRetryPolicy(), intervalMilliSecond: 5000, waitType: RetryWaitType.Double);
+            string content = HttpRequestHelper.GetContentFromHttpUrl(Url, null, Credentials);
 
             var entity = new Entity();
             entity.SetValue(Entity.DefaultColumn, content);

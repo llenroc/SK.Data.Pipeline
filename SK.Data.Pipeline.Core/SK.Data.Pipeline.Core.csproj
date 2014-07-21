@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -45,8 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\HtmlAgilityHelper.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\StringUtil.cs" />
+    <Compile Include="Common\HttpRequestHelper.cs" />
     <Compile Include="Consumer\MonitorConsumer.cs" />
     <Compile Include="Consumer\TemplateFileConsumer.cs" />
     <Compile Include="DataNode.cs" />
@@ -58,6 +63,7 @@
     <Compile Include="PipelineTask.Extension.cs" />
     <Compile Include="Process\AddTemplateColumnProcessNode.cs" />
     <Compile Include="Process\ConvertProcessNode.cs" />
+    <Compile Include="Process\ParseHtmlProcessNode.cs" />
     <Compile Include="Process\TopProcessNode.cs" />
     <Compile Include="Process\ExtendProcessNode.cs" />
     <Compile Include="Process\FilterProcessNode.cs" />
@@ -73,6 +79,7 @@
     <Compile Include="Source\FuncSourceNode.cs" />
     <Compile Include="Source\SingleLineFileSourceNode.cs" />
     <Compile Include="Process\SpiltProcessNode.cs" />
+    <Compile Include="Source\WebCrawlerSourceNode.cs" />
     <Compile Include="Source\WebSourceNode.cs" />
   </ItemGroup>
   <ItemGroup>
