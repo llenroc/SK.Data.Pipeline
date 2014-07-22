@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.RazorTempl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Test", "SK.Data.Pipeline.Test\SK.Data.Pipeline.Test.csproj", "{95254E77-2C7C-4127-98E9-C48508AA8DBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK.Data.Pipeline.Azure", "SK.Data.Pipeline.Azure\SK.Data.Pipeline.Azure.csproj", "{453EB75E-A5FC-4AA5-B631-9AE4C310C57C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{95254E77-2C7C-4127-98E9-C48508AA8DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95254E77-2C7C-4127-98E9-C48508AA8DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95254E77-2C7C-4127-98E9-C48508AA8DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{453EB75E-A5FC-4AA5-B631-9AE4C310C57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{453EB75E-A5FC-4AA5-B631-9AE4C310C57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{453EB75E-A5FC-4AA5-B631-9AE4C310C57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{453EB75E-A5FC-4AA5-B631-9AE4C310C57C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

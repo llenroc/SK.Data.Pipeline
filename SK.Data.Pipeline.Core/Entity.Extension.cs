@@ -58,7 +58,7 @@ namespace SK.Data.Pipeline.Core
             return DictionaryEqual(this.Values, (obj as Entity).Values);
         }
 
-        public object ToDynamicObject()
+        public DynamicObject ToDynamicObject()
         {
             return new DynamicEntity(this);
         }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SK.Data.Pipeline.Core.Source
+namespace SK.Data.Pipeline.Core
 {
     public struct ConnectInfo
     {

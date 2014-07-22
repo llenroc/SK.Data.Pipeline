@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SK.Data.Pipeline.Core.Source;
 
 namespace SK.Data.Pipeline.Core.Test
 {
@@ -15,7 +14,7 @@ namespace SK.Data.Pipeline.Core.Test
                                     new ConnectInfo()
                                     {
                                         Db = "DatasetInfo",
-                                        Server = "SKWWT-COMPUTER",
+                                        Server = ".",
                                         IsTrust = true
                                     })
                                  .AddMonitor((entity) =>
@@ -23,6 +22,7 @@ namespace SK.Data.Pipeline.Core.Test
                                      count++;
                                      Assert.IsFalse(entity.IsEmpty());
                                  })
+                                 .ToCsvFile("CSVOutput")
                                  .Start();
 
             Assert.IsTrue(count == 71);

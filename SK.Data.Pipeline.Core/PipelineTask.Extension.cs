@@ -1,5 +1,4 @@
-﻿using SK.Data.Pipeline.Core.Source;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -165,6 +164,16 @@ namespace SK.Data.Pipeline.Core
         {
             To(new FileConsumer(path, model, separator));
             return this;
+        }
+
+        public PipelineTask ToCsvFile(string path, EntityModel model)
+        {
+            return ToFile(path, model);
+        }
+
+        public PipelineTask ToCsvFile(string path, string[] columns = null)
+        {
+            return ToFile(path, ", ", columns);
         }
 
         public PipelineTask ToTemplateFile(string path, string template)
