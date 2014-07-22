@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Net;
 
 namespace SK.Data.Pipeline.Core.Test
 {
@@ -9,6 +10,7 @@ namespace SK.Data.Pipeline.Core.Test
         const string SampleSource = "SampleSource";
         const string XmlSource = "Source.xml";
         const string Output = "Output";
+        const string SampleJsonOutput = "SampleJsonOutput";
 
         [TestMethod]
         public void CsvBasic()
@@ -32,6 +34,20 @@ namespace SK.Data.Pipeline.Core.Test
                         .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SampleSource, Output));
+        }
+
+        [TestMethod]
+        public void JsonBasic()
+        {
+            XMLEntityModel model = new XMLEntityModel(@".//Results");
+            model.AddXMLColumn("Name", "./Name");
+            model.AddXMLColumn("Desc", "./Desc");
+
+            PipelineTask.FromJsonFile("Course", model)
+                        .ToFile(Output)
+                        .Start();
+
+            Assert.IsTrue(TestHelper.CompareTwoFile(SampleJsonOutput, Output));
         }
     }
 }

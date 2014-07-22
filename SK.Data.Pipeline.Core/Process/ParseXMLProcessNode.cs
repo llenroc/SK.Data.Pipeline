@@ -30,9 +30,10 @@ namespace SK.Data.Pipeline.Core
                 {
                     foreach (var newEntity in Parse(content))
                     {
-                        entity.Extend(newEntity);
-                        entity.RemoveColumn(TargetColumn);
-                        yield return entity;
+                        Entity cloneEntity = entity.Clone();
+                        cloneEntity.Extend(newEntity);
+                        cloneEntity.RemoveColumn(TargetColumn);
+                        yield return cloneEntity;
                     }
                 }
                 else
@@ -42,7 +43,7 @@ namespace SK.Data.Pipeline.Core
             }
         }
 
-        private IEnumerable<Entity> Parse(string content)
+        protected virtual IEnumerable<Entity> Parse(string content)
         {
             byte[] byteArray = Encoding.UTF8.GetBytes(content);
             MemoryStream stream = new MemoryStream(byteArray);

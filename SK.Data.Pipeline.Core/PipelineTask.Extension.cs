@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SK.Data.Pipeline.Core.Source;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -20,9 +22,9 @@ namespace SK.Data.Pipeline.Core
             return Create(new FuncSourceNode(getEntitiesFunc));
         }
 
-        public static PipelineTask FromWeb(string url, ICredentials credential = null)
+        public static PipelineTask FromWeb(string url, CookieContainer cookieContainer = null, ICredentials credential = null)
         {
-            return PipelineTask.Create(new WebSourceNode(url, credential));
+            return PipelineTask.Create(new WebSourceNode(url, cookieContainer, credential));
         }
 
         public static PipelineTask FromCsvFile(string path)
@@ -34,14 +36,29 @@ namespace SK.Data.Pipeline.Core
         public static PipelineTask FromXmlFile(string path, XMLEntityModel model)
         {
             return PipelineTask.Create(new FileSourceNode(path))
-                               .ParseXml(Entity.DefaultColumn, model)
-                               .RemoveFields(Entity.DefaultColumn);
+                               .ParseXml(Entity.DefaultColumn, model);
         }
 
-        public static PipelineTask FromHtml(string url, EntityModel model, ICredentials credential = null)
+        public static PipelineTask FromJsonWeb(string url, XMLEntityModel model, CookieContainer container = null)
         {
-            return PipelineTask.Create(new WebSourceNode(url, credential));
-                               
+            return PipelineTask.Create(new WebSourceNode(url, container))
+                               .ParseJson(Entity.DefaultColumn, model);
+        }
+
+        public static PipelineTask FromJsonFile(string path, XMLEntityModel model)
+        {
+            return PipelineTask.Create(new FileSourceNode(path))
+                               .ParseJson(Entity.DefaultColumn, model);
+        }
+
+        public static PipelineTask FromHtml(string url, EntityModel model, CookieContainer cookieContainer = null, ICredentials credential = null)
+        {
+            return PipelineTask.Create(new WebSourceNode(url, cookieContainer, credential));
+        }
+
+        public static PipelineTask FromSql(string query, ConnectInfo connectInfo, params SqlParameter[] parameters)
+        {
+            return PipelineTask.Create(new SqlSourceNode(query, connectInfo, parameters));
         }
         #endregion
 
@@ -101,6 +118,14 @@ namespace SK.Data.Pipeline.Core
 
             return this;
         }
+
+        public PipelineTask ParseJson(string targetColumn, XMLEntityModel model)
+        {
+            AddProcessNode((node) => new ParseJsonProcessNode(node, targetColumn, model));
+
+            return this;
+        }
+
         public PipelineTask ParseHtml(string column, XMLEntityModel model)
         {
             AddProcessNode((node) => new ParseHtmlProcessNode(node, column, model));

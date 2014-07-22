@@ -22,6 +22,10 @@ namespace SK.Data.Pipeline.Core.Test
 
             PipelineTask.FromWeb("http://en.wikipedia.org/wiki/China_provinces")
                         .ParseHtml(model)
+                        .AddMonitor((entity) =>
+                        {
+                            Console.WriteLine();
+                        })
                         .ToFile(Output, model)
                         .Start();
 
@@ -31,11 +35,6 @@ namespace SK.Data.Pipeline.Core.Test
         [TestMethod]
         public void CrawlerTest()
         {
-            
-
-
-            
-
             CookieContainer cookieContainer = new CookieContainer();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(@"https://bbs.sjtu.edu.cn/bbslogin?id=guest");
             request.ProtocolVersion = HttpVersion.Version10;

@@ -14,16 +14,18 @@ namespace SK.Data.Pipeline.Core
     {
         public string Url { set; get; }
         public ICredentials Credentials { get; set; }
+        public CookieContainer CookieContainer { get; set; }
 
-        public WebSourceNode(string url, ICredentials credentials = null)
+        public WebSourceNode(string url, CookieContainer cookieContainer = null, ICredentials credentials = null)
             : base()
         {
             Url = url;
+            CookieContainer = cookieContainer;
         }
 
         protected override IEnumerable<Entity> GetEntities()
         {
-            string content = HttpRequestHelper.GetContentFromHttpUrl(Url, null, Credentials);
+            string content = HttpRequestHelper.GetContentFromHttpUrl(Url, CookieContainer, Credentials);
 
             var entity = new Entity();
             entity.SetValue(Entity.DefaultColumn, content);
