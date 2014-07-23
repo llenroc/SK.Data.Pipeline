@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,16 +17,20 @@ namespace SK.Data.Pipeline.Core
         public ICredentials Credentials { get; set; }
         public CookieContainer CookieContainer { get; set; }
 
-        public WebSourceNode(string url, CookieContainer cookieContainer = null, ICredentials credentials = null)
+        public X509Certificate Ceritficate { get; set; }
+
+        public WebSourceNode(string url, CookieContainer cookieContainer = null, ICredentials credentials = null, X509Certificate ceritficate = null)
             : base()
         {
             Url = url;
+            Credentials = credentials;
             CookieContainer = cookieContainer;
+            Ceritficate = ceritficate;
         }
 
         protected override IEnumerable<Entity> GetEntities()
         {
-            string content = HttpRequestHelper.GetContentFromHttpUrl(Url, CookieContainer, Credentials);
+            string content = HttpRequestHelper.GetContentFromHttpUrl(Url, CookieContainer, Credentials, Ceritficate);
 
             var entity = new Entity();
             entity.SetValue(Entity.DefaultColumn, content);

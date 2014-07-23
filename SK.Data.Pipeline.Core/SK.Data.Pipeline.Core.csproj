@@ -68,6 +68,7 @@
     <Compile Include="PipelineTask.Extension.cs" />
     <Compile Include="Process\AddTemplateColumnProcessNode.cs" />
     <Compile Include="Process\ConvertProcessNode.cs" />
+    <Compile Include="Process\FuncProcessNode.cs" />
     <Compile Include="Process\ParseHtmlProcessNode.cs" />
     <Compile Include="Process\ParseJsonProcessNode.cs" />
     <Compile Include="Process\TopProcessNode.cs" />

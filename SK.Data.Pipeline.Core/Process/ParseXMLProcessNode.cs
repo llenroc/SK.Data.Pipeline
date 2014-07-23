@@ -68,7 +68,11 @@ namespace SK.Data.Pipeline.Core
                     }
                 }
 
-                yield return entity;
+                if (!entity.IsEmpty())
+                {
+                    entity.SetValue("Position", itemItr.CurrentPosition);
+                    yield return entity;
+                }
             }
         }
     }

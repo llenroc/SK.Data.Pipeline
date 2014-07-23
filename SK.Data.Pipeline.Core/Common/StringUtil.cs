@@ -33,6 +33,12 @@ namespace SK.Data.Pipeline.Core.Common
                 return intObj;
             }
 
+            double doubleObj = 0;
+            if (double.TryParse(valueStr, out doubleObj))
+            {
+                return doubleObj;
+            }
+
             return valueStr;
         }
 

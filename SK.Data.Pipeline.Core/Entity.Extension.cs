@@ -95,14 +95,14 @@ namespace SK.Data.Pipeline.Core
 
             public override bool TryGetMember(GetMemberBinder binder, out object result)
             {
-                string name = binder.Name.ToLower();
+                string name = binder.Name;
                 return _Dictionary.TryGetValue(name, out result);
             }
 
             public override bool TrySetMember(
                 SetMemberBinder binder, object value)
             {
-                _Dictionary[binder.Name.ToLower()] = value;
+                _Dictionary[binder.Name] = value;
                 return true;
             }
 

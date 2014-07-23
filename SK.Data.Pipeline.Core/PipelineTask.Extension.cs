@@ -65,70 +65,57 @@ namespace SK.Data.Pipeline.Core
         public PipelineTask AddProcessNode(Func<DataNode, ProcessNode> createProcessNode)
         {
             _LastNode = createProcessNode(_LastNode);
-
             return this;
+        }
+
+        public PipelineTask AddProcess(Func<IEnumerable<Entity>, IEnumerable<Entity>> processFunc)
+        {
+            return AddProcessNode((parent) => new FuncProcessNode(parent, processFunc));
         }
 
         public PipelineTask RemoveFields(params string[] columnsShouldRemove)
         {
-            AddProcessNode((node) => new RemoveColumnsProcessNode(node, columnsShouldRemove));
-
-            return this;
+            return AddProcessNode((node) => new RemoveColumnsProcessNode(node, columnsShouldRemove));
         }
 
         public PipelineTask Filter(Predicate<Entity> shouldFilter)
         {
-            AddProcessNode((node) => new FilterProcessNode(node, shouldFilter));
-
-            return this;
+            return AddProcessNode((node) => new FilterProcessNode(node, shouldFilter));
         }
 
         public PipelineTask Extend(Action<Entity> extendAction)
         {
-            AddProcessNode((node) => new ExtendProcessNode(node, extendAction));
-
-            return this;
+            return AddProcessNode((node) => new ExtendProcessNode(node, extendAction));
         }
 
         public PipelineTask Convert(Func<Entity, Entity> convertFunc)
         {
-            AddProcessNode((node) => new ConvertProcessNode(node, convertFunc));
-
-            return this;
+            return AddProcessNode((node) => new ConvertProcessNode(node, convertFunc));
         }
 
         public PipelineTask Spilt(string targetColumn, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
         {
-            AddProcessNode((node) => new SpiltProcessNode(node, targetColumn, separator, spiltColumns));
-
-            return this;
+            return AddProcessNode((node) => new SpiltProcessNode(node, targetColumn, separator, spiltColumns));
         }
 
         public PipelineTask ParseCsv(string targetColumn)
         {
-            AddProcessNode((node) => new ParseCsvProcessNode(node, targetColumn));
-
-            return this;
+            return AddProcessNode((node) => new ParseCsvProcessNode(node, targetColumn));
         }
 
         public PipelineTask ParseXml(string targetColumn, XMLEntityModel model)
         {
-            AddProcessNode((node) => new ParseXMLProcessNode(node, targetColumn, model));
-
-            return this;
+            return AddProcessNode((node) => new ParseXMLProcessNode(node, targetColumn, model));
         }
 
         public PipelineTask ParseJson(string targetColumn, XMLEntityModel model)
         {
-            AddProcessNode((node) => new ParseJsonProcessNode(node, targetColumn, model));
-
-            return this;
+            return AddProcessNode((node) => new ParseJsonProcessNode(node, targetColumn, model));
         }
 
         public PipelineTask ParseHtml(string column, XMLEntityModel model)
         {
-            AddProcessNode((node) => new ParseHtmlProcessNode(node, column, model));
-            return this;
+            return AddProcessNode((node) => new ParseHtmlProcessNode(node, column, model));
         }
 
         public PipelineTask ParseHtml(XMLEntityModel model)
@@ -138,9 +125,7 @@ namespace SK.Data.Pipeline.Core
 
         public PipelineTask AddTemplateColumn(string targetColumn, string template)
         {
-            AddProcessNode((node) => new AddTemplateColumnProcessNode(_LastNode, targetColumn, template));
-
-            return this;
+            return AddProcessNode((node) => new AddTemplateColumnProcessNode(_LastNode, targetColumn, template));
         }
         #endregion
 
