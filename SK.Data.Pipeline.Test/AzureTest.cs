@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 using SK.Data.Pipeline.Azure;
 using SK.Data.Pipeline.Core;
 using System;
@@ -12,17 +14,32 @@ namespace SK.Data.Pipeline.Test
     [TestClass]
     public class AzureTest
     {
-        [TestMethod]
-        public void TestTableEntity()
-        {
-            Entity entity = new Entity();
-            entity.SetValue("test", "dfadsf");
-            entity.SetValue("col1", 1);
+        private AzureTableInfo info = new AzureTableInfo("pipelinetest", "zCOKPdsKFSMrQ6CNe1j945Z1Gl3mMUxfWMO2jPaIYAYqBcuOejx0lsWZbIu1hf7toJmPrRbEFN75UBHsWjb11A==", "TestTable");
 
-            TableEntity tentity = new TableEntity(entity, "adfa##test####col1##", "addd##test####col1##");
-            var afterentity = tentity.ToEntity();
-            Assert.IsTrue(entity.EqualsOtherEntity(afterentity));
-            Assert.AreEqual(tentity.PartitionKey, "adfadfadsf1");
+        [TestMethod]
+        public void AzureTableConsumer()
+        {
+            PipelineTask.FromCsvFile("SimpleSource")
+                    .AddMonitor((entity) =>
+                    {
+                        Console.WriteLine();
+                    })
+                    .ToAzureTable(info, "##col1##", "##col1####col2##")
+                    .Start();
+        }
+
+        [TestMethod]
+        public void AzureTableSource()
+        {
+            int count = 0;
+            PipelineTask.Create(new AzureTableSourceNode(info))
+                    .AddMonitor((entity) =>
+                    {
+                        count++;
+                    })
+                    .Start();
+
+            Assert.AreEqual(2, count);
         }
     }
 }

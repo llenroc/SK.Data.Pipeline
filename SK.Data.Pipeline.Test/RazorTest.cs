@@ -22,7 +22,7 @@ namespace SK.Data.Pipeline.Test
             Pipeline.Create(new SingleLineFileSourceNode(SimpleSource))
                     .Spilt(Entity.DefaultColumn)
                     .AddRazorTemplateColumn("Template", @"@Model.col1 **** @Model.col2")
-                    .ToFile(RazorTemplateColumnFile)
+                    .ToTextFile(RazorTemplateColumnFile)
                     .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SampleRazorTemplateSource, RazorTemplateColumnFile));

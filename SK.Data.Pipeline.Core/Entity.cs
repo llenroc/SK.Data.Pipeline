@@ -7,13 +7,16 @@ using SK.Data.Pipeline.Core.Common;
 
 namespace SK.Data.Pipeline.Core
 {
+    [Serializable]
     public partial class Entity
     {
         #region Properties
+        private Dictionary<string, object> _Values;
+
         public Dictionary<string, object> Values
         {
-            private set;
-            get;
+            set { _Values = value; }
+            get { return _Values; }
         }
 
         public string[] Columns
@@ -32,7 +35,7 @@ namespace SK.Data.Pipeline.Core
 
         public Entity(Dictionary<string, object> values)
         {
-            Values = values;
+            _Values = values;
         }
         #endregion
 

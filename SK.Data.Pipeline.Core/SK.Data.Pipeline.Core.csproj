@@ -59,6 +59,7 @@
     <Compile Include="Common\HttpRequestHelper.cs" />
     <Compile Include="Consumer\MonitorConsumer.cs" />
     <Compile Include="Consumer\TemplateFileConsumer.cs" />
+    <Compile Include="Consumer\FileConsumer.cs" />
     <Compile Include="DataNode.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Entity.Extension.cs" />
@@ -68,7 +69,6 @@
     <Compile Include="PipelineTask.Extension.cs" />
     <Compile Include="Process\AddTemplateColumnProcessNode.cs" />
     <Compile Include="Process\ConvertProcessNode.cs" />
-    <Compile Include="Process\FuncProcessNode.cs" />
     <Compile Include="Process\ParseHtmlProcessNode.cs" />
     <Compile Include="Process\ParseJsonProcessNode.cs" />
     <Compile Include="Process\TopProcessNode.cs" />
@@ -81,8 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProcessNode.cs" />
     <Compile Include="SourceNode.cs" />
-    <Compile Include="Consumer\FileConsumer.cs" />
+    <Compile Include="Consumer\TextFileConsumer.cs" />
     <Compile Include="Source\FileSourceNode.cs" />
+    <Compile Include="Source\TextFileSourceNode.cs" />
     <Compile Include="Source\FuncSourceNode.cs" />
     <Compile Include="Source\SingleLineFileSourceNode.cs" />
     <Compile Include="Process\SpiltProcessNode.cs" />

@@ -34,7 +34,7 @@ namespace SK.Data.Pipeline.Core
 
         public static PipelineTask FromXmlFile(string path, XMLEntityModel model)
         {
-            return PipelineTask.Create(new FileSourceNode(path))
+            return PipelineTask.Create(new TextFileSourceNode(path))
                                .ParseXml(Entity.DefaultColumn, model);
         }
 
@@ -46,7 +46,7 @@ namespace SK.Data.Pipeline.Core
 
         public static PipelineTask FromJsonFile(string path, XMLEntityModel model)
         {
-            return PipelineTask.Create(new FileSourceNode(path))
+            return PipelineTask.Create(new TextFileSourceNode(path))
                                .ParseJson(Entity.DefaultColumn, model);
         }
 
@@ -66,11 +66,6 @@ namespace SK.Data.Pipeline.Core
         {
             _LastNode = createProcessNode(_LastNode);
             return this;
-        }
-
-        public PipelineTask AddProcess(Func<IEnumerable<Entity>, IEnumerable<Entity>> processFunc)
-        {
-            return AddProcessNode((parent) => new FuncProcessNode(parent, processFunc));
         }
 
         public PipelineTask RemoveFields(params string[] columnsShouldRemove)
@@ -139,26 +134,31 @@ namespace SK.Data.Pipeline.Core
             return this;
         }
 
-        public PipelineTask ToFile(string path, string separator = Entity.DefaultSeparator, string[] columns = null)
+        public PipelineTask ToFile(string path)
         {
-            To(new FileConsumer(path, separator, columns));
+            return To(new FileConsumer(path));
+        }
+
+        public PipelineTask ToTextFile(string path, string separator = Entity.DefaultSeparator, string[] columns = null)
+        {
+            To(new TextFileConsumer(path, separator, columns));
             return this;
         }
 
-        public PipelineTask ToFile(string path, EntityModel model, string separator = Entity.DefaultSeparator)
+        public PipelineTask ToTextFile(string path, EntityModel model, string separator = Entity.DefaultSeparator)
         {
-            To(new FileConsumer(path, model, separator));
+            To(new TextFileConsumer(path, model, separator));
             return this;
         }
 
         public PipelineTask ToCsvFile(string path, EntityModel model)
         {
-            return ToFile(path, model);
+            return ToTextFile(path, model);
         }
 
         public PipelineTask ToCsvFile(string path, string[] columns = null)
         {
-            return ToFile(path, ", ", columns);
+            return ToTextFile(path, ", ", columns);
         }
 
         public PipelineTask ToTemplateFile(string path, string template)

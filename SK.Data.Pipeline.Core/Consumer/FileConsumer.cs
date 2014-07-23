@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SK.Data.Pipeline.Core.Common;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SK.Data.Pipeline.Core
 {
@@ -12,70 +14,27 @@ namespace SK.Data.Pipeline.Core
     {
         public string Path { get; set; }
 
-        public string Separator { get; set; }
+        private Stream _Stream;
 
-        public EntityModel Model { get; private set; }
-
-        private TextWriter _Writer = null;
-
-        public FileConsumer(string path, string separator = Entity.DefaultSeparator, string[] columns = null)
+        public FileConsumer(string path)
         {
             Path = path;
-            Separator = separator;
-
-            if (columns != null)
-                Model = new EntityModel(columns);
-        }
-
-        public FileConsumer(string path, EntityModel model, string separator = Entity.DefaultSeparator)
-        {
-            Path = path;
-            Separator = separator;
-            Model = model;
-        }
-
-        private void InitColumns(Entity entity)
-        {
-            Model = new EntityModel(entity.Columns);
-        }
-
-        private void WirteTitle()
-        {
-            _Writer.WriteLine(string.Join(Separator, Model.Columns));
         }
 
         public override void Start(object sender, StartEventArgs args)
         {
-            _Writer = File.CreateText(Path);
-        }
-
-        public override void GetFirstEntity(object sender, FirstEntityEventArgs args)
-        {
-            if (Model == null)
-            {
-                InitColumns(args.FirstEntity);
-            }
-
-            WirteTitle();
+            _Stream = File.Open(Path, FileMode.OpenOrCreate);
         }
 
         public override void Consume(object sender, GetEntityEventArgs args)
         {
-            var currentEntity = args.CurrentEntity;
-            currentEntity.ToStandradEntity(Model);
-
-            object[] values = new object[Model.Columns.Length];
-            for (int i = 0; i < Model.Columns.Length; ++i)
-            {
-                currentEntity.TryGetValue(Model.Columns[i], out values[i]);
-            }
-
-            _Writer.WriteLine(string.Join(Separator, values).Replace('\r', ' ').Replace('\n', ' '));
+            IFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(_Stream, args.CurrentEntity);
         }
 
         public override void Finish(object sender, FinishEventArgs args)
         {
-            _Writer.Dispose();
+            _Stream.Close();
 
             string.Format("{0} lines data wrote to {1}", args.Count, Path).Info();
         }

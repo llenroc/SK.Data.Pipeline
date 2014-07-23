@@ -26,7 +26,7 @@ namespace SK.Data.Pipeline.Core.Test
                         {
                             Console.WriteLine();
                         })
-                        .ToFile(Output, model)
+                        .ToTextFile(Output, model)
                         .Start();
 
             TestHelper.CompareTwoFile(Province, Output);

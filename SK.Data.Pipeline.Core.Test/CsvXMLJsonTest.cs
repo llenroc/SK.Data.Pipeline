@@ -8,6 +8,7 @@ namespace SK.Data.Pipeline.Core.Test
     public class CsvXMLJsonTest
     {
         const string SampleSource = "SampleSource";
+        const string SampleXMLOutput = "SampleXMLOutput";
         const string XmlSource = "Source.xml";
         const string Output = "Output";
         const string SampleJsonOutput = "SampleJsonOutput";
@@ -16,7 +17,7 @@ namespace SK.Data.Pipeline.Core.Test
         public void CsvBasic()
         {
             PipelineTask.FromCsvFile(SampleSource)
-                        .ToFile(Output)
+                        .ToTextFile(Output)
                         .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SampleSource, Output));
@@ -30,10 +31,10 @@ namespace SK.Data.Pipeline.Core.Test
             model.AddXMLColumn("col2", "./col2");
 
             PipelineTask.FromXmlFile(XmlSource, model)
-                        .ToFile(Output)
+                        .ToTextFile(Output)
                         .Start();
 
-            Assert.IsTrue(TestHelper.CompareTwoFile(SampleSource, Output));
+            Assert.IsTrue(TestHelper.CompareTwoFile(SampleXMLOutput, Output));
         }
 
         [TestMethod]
@@ -44,7 +45,7 @@ namespace SK.Data.Pipeline.Core.Test
             model.AddXMLColumn("Desc", "./Desc");
 
             PipelineTask.FromJsonFile("Course", model)
-                        .ToFile(Output)
+                        .ToTextFile(Output)
                         .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SampleJsonOutput, Output));

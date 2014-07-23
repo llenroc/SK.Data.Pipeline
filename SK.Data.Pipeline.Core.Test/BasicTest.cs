@@ -13,11 +13,26 @@ namespace SK.Data.Pipeline.Core.Test
         const string SampleTemplateFileOutput = "SampleTemplateFileOutput";
 
         [TestMethod]
-        public void FromFileToFile()
+        public void FileSerilization()
         {
             PipelineTask.Create(new SingleLineFileSourceNode(SimpleSource))
                     .Spilt(Entity.DefaultColumn)
-                    .To(new FileConsumer(SimpleFileOutput))
+                    .ToFile(SimpleFileOutput)
+                    .Start();
+
+            PipelineTask.Create(new FileSourceNode(SimpleFileOutput))
+                    .ToTextFile(SimpleSourceT)
+                    .Start();
+
+            Assert.IsTrue(TestHelper.CompareTwoFile(SimpleSource, SimpleSourceT));
+        }
+
+        [TestMethod]
+        public void FromTextFileToTextFile()
+        {
+            PipelineTask.Create(new SingleLineFileSourceNode(SimpleSource))
+                    .Spilt(Entity.DefaultColumn)
+                    .To(new TextFileConsumer(SimpleFileOutput))
                     .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SimpleSource, SimpleFileOutput));
@@ -28,7 +43,7 @@ namespace SK.Data.Pipeline.Core.Test
         {
             PipelineTask.Create(new SingleLineFileSourceNode(SimpleSourceT))
                     .Spilt(Entity.DefaultColumn, separator: "\t")
-                    .To(new FileConsumer(SimpleFileOutput))
+                    .To(new TextFileConsumer(SimpleFileOutput))
                     .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SimpleSource, SimpleFileOutput));
@@ -40,7 +55,7 @@ namespace SK.Data.Pipeline.Core.Test
             PipelineTask.Create(new SingleLineFileSourceNode(SimpleSourceT))
                     .Spilt(Entity.DefaultColumn, separator: "\t")
                     .AddTemplateColumn("Template", "##col1## ##col2")
-                    .ToFile(TemplateFileOutput)
+                    .ToTextFile(TemplateFileOutput)
                     .Start();
 
             Assert.IsTrue(TestHelper.CompareTwoFile(SampleTemplateFileOutput, TemplateFileOutput));

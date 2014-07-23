@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,10 +21,20 @@ namespace SK.Data.Pipeline.Core
 
         protected override IEnumerable<Entity> GetEntities()
         {
-            var entity = new Entity();
-            entity.SetValue(Entity.DefaultColumn, File.ReadAllText(FilePath), false);
-            
-            yield return entity;
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            try
+            {
+                while (stream.Position < stream.Length)
+                {
+                    yield return (Entity)formatter.Deserialize(stream);
+                }
+            }
+            finally
+            {
+                stream.Close();
+            }
         }
     }
 }

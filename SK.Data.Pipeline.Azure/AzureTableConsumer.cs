@@ -9,23 +9,19 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Azure
 {
-    public struct AzureTableInfo
-    {
-        public string ConnectionString;
-        public string TableName;
-        public string PartitionKey;
-        public string RowKey;
-    }
-
     public class AzureTableConsumer : ConsumerBase
     {
         public AzureTableInfo TableInfo { get; set; }
+        public string PartitionKeyTemplate { get; set; }
+        public string RowKeyTemplate { get; set; }
 
         private CloudTable _Table;
 
-        public AzureTableConsumer(AzureTableInfo azureTableInfo)
+        public AzureTableConsumer(AzureTableInfo azureTableInfo, string partitionKeyTemplate, string rowKeyTemplate)
         {
             TableInfo = azureTableInfo;
+            PartitionKeyTemplate = partitionKeyTemplate;
+            RowKeyTemplate = rowKeyTemplate;
         }
 
         public override void Start(object sender, StartEventArgs args)
@@ -37,7 +33,7 @@ namespace SK.Data.Pipeline.Azure
 
         public override void Consume(object sender, GetEntityEventArgs args)
         {
-            TableOperation insertOperation = TableOperation.Insert(new TableEntity(args.CurrentEntity, TableInfo.PartitionKey, TableInfo.RowKey));
+            TableOperation insertOperation = TableOperation.InsertOrReplace(new TableEntity(args.CurrentEntity, PartitionKeyTemplate, RowKeyTemplate));
             _Table.Execute(insertOperation);
         }
     }

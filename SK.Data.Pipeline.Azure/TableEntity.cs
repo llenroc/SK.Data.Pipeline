@@ -33,6 +33,11 @@ namespace SK.Data.Pipeline.Azure
         private IDictionary<string, EntityProperty> _TableValues;
         private string _ETag = "*";
 
+        public TableEntity()
+        {
+            _TableValues = new Dictionary<string, EntityProperty>();
+        }
+
         public TableEntity(Entity entity, string partitionKey, string rowKey)
         {
             _TableValues = new Dictionary<string, EntityProperty>();
