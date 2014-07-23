@@ -21,6 +21,17 @@ namespace SK.Data.Pipeline.Core
             return Create(new FuncSourceNode(getEntitiesFunc));
         }
 
+        public static PipelineTask FromFile(string path)
+        {
+            return PipelineTask.Create(new FileSourceNode(path));
+        }
+
+        public static PipelineTask FromTextFile(string path, string separator = Entity.DefaultSeparator, string[] spiltColumns = null)
+        {
+            return PipelineTask.Create(new SingleLineFileSourceNode(path))
+                               .Spilt(Entity.DefaultColumn, separator, spiltColumns);
+        }
+
         public static PipelineTask FromWeb(string url, CookieContainer cookieContainer = null, ICredentials credential = null)
         {
             return PipelineTask.Create(new WebSourceNode(url, cookieContainer, credential));

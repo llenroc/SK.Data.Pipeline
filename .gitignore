@@ -5,3 +5,5 @@ TestResults/
 UHRSTest/
 *.suo
 *.nupkg
+*.exe
+*.nupkg
