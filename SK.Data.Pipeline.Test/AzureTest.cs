@@ -17,20 +17,16 @@ namespace SK.Data.Pipeline.Test
         private AzureTableInfo info = new AzureTableInfo("pipelinetest", "zCOKPdsKFSMrQ6CNe1j945Z1Gl3mMUxfWMO2jPaIYAYqBcuOejx0lsWZbIu1hf7toJmPrRbEFN75UBHsWjb11A==", "TestTable");
 
         [TestMethod]
-        public void AzureTableConsumer()
+        public void AzureTableTest()
         {
-            PipelineTask.FromCsvFile("SimpleSource")
+            PipelineTask.FromCsvFile("SimpleAzureSource")
                     .AddMonitor((entity) =>
                     {
                         Console.WriteLine();
                     })
                     .ToAzureTable(info, "##col1##", "##col1####col2##")
                     .Start();
-        }
 
-        [TestMethod]
-        public void AzureTableSource()
-        {
             int count = 0;
             PipelineTask.Create(new AzureTableSourceNode(info))
                     .AddMonitor((entity) =>
@@ -39,7 +35,7 @@ namespace SK.Data.Pipeline.Test
                     })
                     .Start();
 
-            Assert.AreEqual(2, count);
+            Assert.AreEqual(5, count);
         }
     }
 }

@@ -91,6 +91,9 @@
     <None Include="SampleRazorTemplateSource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="SimpleAzureSource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SK.Data.Pipeline.Azure\SK.Data.Pipeline.Azure.csproj">

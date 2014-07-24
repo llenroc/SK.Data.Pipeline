@@ -15,13 +15,17 @@ namespace SK.Data.Pipeline.Azure
         public string PartitionKeyTemplate { get; set; }
         public string RowKeyTemplate { get; set; }
 
-        private CloudTable _Table;
+        public int MaxParallelCount { get; set; }
 
-        public AzureTableConsumer(AzureTableInfo azureTableInfo, string partitionKeyTemplate, string rowKeyTemplate)
+        private CloudTable _Table;
+        private List<TableEntity> _EntitiesWaitForInsert = new List<TableEntity>();
+
+        public AzureTableConsumer(AzureTableInfo azureTableInfo, string partitionKeyTemplate, string rowKeyTemplate, int maxParallelCount = 10)
         {
             TableInfo = azureTableInfo;
             PartitionKeyTemplate = partitionKeyTemplate;
             RowKeyTemplate = rowKeyTemplate;
+            MaxParallelCount = maxParallelCount;
         }
 
         public override void Start(object sender, StartEventArgs args)
@@ -33,8 +37,36 @@ namespace SK.Data.Pipeline.Azure
 
         public override void Consume(object sender, GetEntityEventArgs args)
         {
-            TableOperation insertOperation = TableOperation.InsertOrReplace(new TableEntity(args.CurrentEntity, PartitionKeyTemplate, RowKeyTemplate));
-            _Table.Execute(insertOperation);
+            // Insert entity to list and wait for inserting in the parallel way
+            _EntitiesWaitForInsert.Add(new TableEntity(args.CurrentEntity, PartitionKeyTemplate, RowKeyTemplate));
+            if (_EntitiesWaitForInsert.Count < MaxParallelCount) return;
+
+            InsertAllTableEntity();
+        }
+
+        public override void Finish(object sender, FinishEventArgs args)
+        {
+            // Make sure all Entities have been inserted.
+            InsertAllTableEntity();
+        }
+
+        /// <summary>
+        /// Insert and clean all TableEntitys in wait list
+        /// </summary>
+        private void InsertAllTableEntity()
+        {
+            Parallel.ForEach(_EntitiesWaitForInsert,
+                new ParallelOptions()
+                {
+                     MaxDegreeOfParallelism = MaxParallelCount
+                }
+                ,(tableEntity) =>
+                {
+                    TableOperation insertOperation = TableOperation.InsertOrReplace(tableEntity);
+                    _Table.Execute(insertOperation);
+                });
+
+            _EntitiesWaitForInsert.Clear();
         }
     }
 }

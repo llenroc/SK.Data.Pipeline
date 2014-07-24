@@ -26,8 +26,8 @@ namespace SK.Data.Pipeline.Azure
             }
         }
 
-        public string PartitionKey { get; set; }
-        public string RowKey { get; set; }
+        public string PartitionKeyTemplate { get; set; }
+        public string RowKeyTemplate { get; set; }
         public DateTimeOffset Timestamp { get; set; }
 
         private IDictionary<string, EntityProperty> _TableValues;
@@ -38,7 +38,7 @@ namespace SK.Data.Pipeline.Azure
             _TableValues = new Dictionary<string, EntityProperty>();
         }
 
-        public TableEntity(Entity entity, string partitionKey, string rowKey)
+        public TableEntity(Entity entity, string partitionKeyTemplate, string rowKeyTemplate)
         {
             _TableValues = new Dictionary<string, EntityProperty>();
             foreach (string key in entity.Values.Keys)
@@ -46,7 +46,7 @@ namespace SK.Data.Pipeline.Azure
                 _TableValues[key] = ConvertToEntityProperty(key, entity.Values[key]);
             }
 
-            PartitionKey = TemplateRegex.Replace(partitionKey, (match) =>
+            PartitionKeyTemplate = TemplateRegex.Replace(partitionKeyTemplate, (match) =>
             {
                 object value = null;
                 if (entity.TryGetValue(match.Groups[1].Value, out value))
@@ -60,7 +60,7 @@ namespace SK.Data.Pipeline.Azure
                 return match.Value;
             });
 
-            RowKey = TemplateRegex.Replace(rowKey, (match) =>
+            RowKeyTemplate = TemplateRegex.Replace(rowKeyTemplate, (match) =>
             {
                 object value = null;
                 if (entity.TryGetValue(match.Groups[1].Value, out value))
@@ -87,6 +87,9 @@ namespace SK.Data.Pipeline.Azure
             return _TableValues;
         }
 
+        /// <summary>
+        /// Convert TableEntity to Entity, 
+        /// </summary>
         public Entity ToEntity()
         {
             Entity entity = new Entity();

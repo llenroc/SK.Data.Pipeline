@@ -6,9 +6,18 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Azure
 {
+    /// <summary>
+    /// Contains Azure Table Name & ConnectionString
+    /// </summary>
     public class AzureTableInfo : AzureStorageInfo
     {
         public AzureTableInfo(string tableName)
+        {
+            TableName = tableName;
+        }
+
+        public AzureTableInfo(string connectionString, string tableName)
+            : base(connectionString)
         {
             TableName = tableName;
         }
@@ -22,11 +31,19 @@ namespace SK.Data.Pipeline.Azure
         public string TableName { get; set; }
     }
 
+    /// <summary>
+    /// AzureStorageInfo contains ConnectionString, default use local cloud storage emulator
+    /// </summary>
     public class AzureStorageInfo
     {
         public AzureStorageInfo()
         {
             ConnectionString = @"UseDevelopmentStorage=true;";
+        }
+
+        public AzureStorageInfo(string connectionString)
+        {
+            ConnectionString = connectionString;
         }
 
         public AzureStorageInfo(string accountName, string accountKey)

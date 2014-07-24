@@ -9,9 +9,9 @@ namespace SK.Data.Pipeline.Azure
 {
     public static class AzurePipelineExtension
     {
-        public static PipelineTask ToAzureTable(this PipelineTask pipelineTask, AzureTableInfo azureTableInfo, string partitionKeyTemplate, string rowKeyTemplate)
+        public static PipelineTask ToAzureTable(this PipelineTask pipelineTask, AzureTableInfo azureTableInfo, string partitionKeyTemplate, string rowKeyTemplate, int maxParallelCount = 10)
         {
-            return pipelineTask.To(new AzureTableConsumer(azureTableInfo, partitionKeyTemplate, rowKeyTemplate));
+            return pipelineTask.To(new AzureTableConsumer(azureTableInfo, partitionKeyTemplate, rowKeyTemplate, maxParallelCount));
         }
     }
 }

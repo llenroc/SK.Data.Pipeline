@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace SK.Data.Pipeline.Azure
 {
+    /// <summary>
+    /// Get entities from Azure Table
+    /// </summary>
     public class AzureTableSourceNode : SourceNode
     {
         public AzureTableInfo TableInfo { set; get; }
